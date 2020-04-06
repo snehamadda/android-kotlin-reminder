@@ -1,45 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tool="http://schemas.android.com/apk/res-auto"
     android:layout_margin="10dp"
-    android:orientation="horizontal">
+    android:background="@color/colorWhite"
+    android:orientation="horizontal"
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/serialTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        tools:text="1" />
+        tools:text="1"
+        android:padding="5dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:orientation="vertical">
-
-
-        <TextView
-            android:id="@+id/reminderTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Reminder title" />
-
-        <TextView
-            android:id="@+id/dateAndTimeTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Description" />
-    </LinearLayout>
+        android:orientation="vertical"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@+id/serialTV"
+        android:layout_toStartOf="@id/timeAndDateLL">
 
     <TextView
-        android:id="@+id/timeTV"
+        android:id="@+id/reminderTV"
+        android:padding="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        tools:text="2:45Am and 2-02-2020" />
-</LinearLayout>
+        tools:text="Title"/>
+
+        <TextView
+            android:id="@+id/descriptionTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Description"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/timeAndDateLL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:id="@+id/timeTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Time" />
+
+        <TextView
+            android:id="@+id/dateTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Date"/>
+    </LinearLayout>
+</RelativeLayout>
