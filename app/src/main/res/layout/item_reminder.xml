@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tool="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="10dp"
+    android:layout_marginBottom="10dp"
     android:background="@color/colorWhite"
     android:orientation="horizontal"
     android:padding="10dp">
@@ -13,29 +12,29 @@
         android:id="@+id/serialTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="1"
-        android:padding="5dp" />
+        android:padding="5dp"
+        tools:text="1" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@id/timeAndDateLL"
         android:layout_toEndOf="@+id/serialTV"
-        android:layout_toStartOf="@id/timeAndDateLL">
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/reminderTV"
-        android:padding="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Title"/>
+        <TextView
+            android:id="@+id/reminderTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            tools:text="Title" />
 
         <TextView
             android:id="@+id/descriptionTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Description"/>
+            tools:text="Description" />
 
     </LinearLayout>
 
@@ -43,9 +42,9 @@
         android:id="@+id/timeAndDateLL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="10dp"
-        android:layout_alignParentEnd="true">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/timeTV"
@@ -57,6 +56,6 @@
             android:id="@+id/dateTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Date"/>
+            tools:text="Date" />
     </LinearLayout>
 </RelativeLayout>

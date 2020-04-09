@@ -54,7 +54,7 @@ class DatabaseHandler(context: Context) :
         return success
     }
 
-    fun getReminderById(id: Int): Reminder {
+    fun getReminderById(id: Long): Reminder {
         val reminder = Reminder()
         val db = this.readableDatabase
         val query = "SELECT * FROM $TABLE_REMINDER WHERE $ID = '$id'"

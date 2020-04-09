@@ -13,23 +13,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.geeklabs.remindme.R
 import com.geeklabs.remindme.database.DatabaseHandler
 import com.geeklabs.remindme.models.Reminder
-import com.geeklabs.remindme.services.ReminderAlarmBroadcastReceiver
+import com.geeklabs.remindme.services.AlarmReceiver
 import com.geeklabs.remindme.utils.Util
 import kotlinx.android.synthetic.main.activity_add_reminder.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+@Suppress("CAST_NEVER_SUCCEEDS")
 class AddReminderActivity : AppCompatActivity() {
 
+    private lateinit var alarmManager: AlarmManager
     private lateinit var databaseHandler: DatabaseHandler
     private val myCalendar = Calendar.getInstance()
     private var date: DatePickerDialog.OnDateSetListener? = null
 
     private var hour: Int = 0
     private var minute: Int = 0
-    private var dayOfMonth: Int = 0
-    private var monthOfYear: Int = 0
-    private var year: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,11 +37,6 @@ class AddReminderActivity : AppCompatActivity() {
         databaseHandler = DatabaseHandler(this)
 
         date = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-
-            this.year = year
-            this.monthOfYear = monthOfYear
-            this.dayOfMonth = dayOfMonth
-
             myCalendar.set(Calendar.YEAR, year)
             myCalendar.set(Calendar.MONTH, monthOfYear)
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -53,8 +47,8 @@ class AddReminderActivity : AppCompatActivity() {
 
         selectDateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(
-                this, date, myCalendar
-                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                this, date, myCalendar.get(Calendar.YEAR),
+                myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)
             )
             datePickerDialog.datePicker.minDate = myCalendar.timeInMillis
@@ -63,19 +57,18 @@ class AddReminderActivity : AppCompatActivity() {
         }
 
         selectTimeButton.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            hour = calendar.get(Calendar.HOUR_OF_DAY)
-            minute = calendar.get(Calendar.MINUTE)
+            hour = myCalendar.get(Calendar.HOUR_OF_DAY)
+            minute = myCalendar.get(Calendar.MINUTE)
 
             val timePickerDialog =
                 TimePickerDialog(
                     this,
                     TimePickerDialog.OnTimeSetListener(function = { _, hour, minute ->
+                        myCalendar.set(Calendar.HOUR_OF_DAY, hour)
+                        myCalendar.set(Calendar.MINUTE, minute)
+                        myCalendar.set(Calendar.SECOND, 0)
                         updateTime(hour, minute)
-                    }),
-                    hour,
-                    minute,
-                    true
+                    }), hour, minute, true
                 )
 
             timePickerDialog.show()
@@ -99,18 +92,14 @@ class AddReminderActivity : AppCompatActivity() {
                 reminder.time = time
                 reminder.date = date
 
-                val saveReminder = databaseHandler.saveReminder(reminder)
-                if (saveReminder != 0L) {
+                val saveReminderId = databaseHandler.saveReminder(reminder)
+                if (saveReminderId != 0L) {
                     Util.showToastMessage(this, "Reminder saved successfully")
 
-                    myCalendar.set(year, monthOfYear + 1, dayOfMonth, hour, minute, 0)
-                    Log.d("AlarmTime", "Year $year")
-                    Log.d("AlarmTime", "Month $monthOfYear")
-                    Log.d("AlarmTime", "Day $dayOfMonth")
                     Log.d("AlarmTime", "Hour $hour")
                     Log.d("AlarmTime", "Min $minute")
 
-                    setRemainderAlarm(myCalendar.timeInMillis)
+                    setRemainderAlarm(saveReminderId)
 
                     finish()
                 } else {
@@ -125,27 +114,27 @@ class AddReminderActivity : AppCompatActivity() {
     private fun updateDate() {
         val dateFormat = "dd/MM/yyyy" //In which you need put here
         val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-        dateTV.text = sdf.format(myCalendar.time)
+        val formattedDate = sdf.format(myCalendar.time)
+        dateTV.text = formattedDate
     }
 
     @SuppressLint("SetTextI18n")
     private fun updateTime(hour: Int, minute: Int) {
         this.hour = hour
         this.minute = minute
-
         timeTV.text = "$hour : $minute"
     }
 
-    private fun setRemainderAlarm(timeInMillis: Long) {
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val reminderIntent = Intent(this, ReminderAlarmBroadcastReceiver::class.java)
+    private fun setRemainderAlarm(savedReminderId: Long) {
+        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val reminderReceiverIntent = Intent(this, AlarmReceiver::class.java)
+        reminderReceiverIntent.putExtra("reminderId", savedReminderId)
         val pendingIntent =
-            PendingIntent.getBroadcast(this, 123, reminderIntent, PendingIntent.FLAG_ONE_SHOT)
-        alarmManager.set(
-            AlarmManager.RTC_WAKEUP, timeInMillis,
-            pendingIntent
-        )
-        Util.showToastMessage(this, "Alarm is set")
+            PendingIntent.getBroadcast(this, savedReminderId.toInt(), reminderReceiverIntent, 0)
+        alarmManager.set(AlarmManager.RTC_WAKEUP, myCalendar.timeInMillis, pendingIntent)
+        Log.d("TimeSetInMillis:", "${myCalendar.timeInMillis}")
+        Util.showToastMessage(this, "Alarm is set at : ${myCalendar.timeInMillis}")
     }
 
 }
+

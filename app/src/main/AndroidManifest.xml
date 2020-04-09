@@ -2,19 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.geeklabs.remindme">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/remind_me_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <activity
             android:name=".activites.SplashActivity"
+            android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,12 +25,23 @@
         </activity>
         <activity
             android:name=".activites.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activites.AddReminderActivity" />
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activites.AddReminderActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/add_reminder" />
+        <activity
+            android:name=".activites.AlarmActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" />
+
+        <service
+            android:name=".services.ReminderService"
+            android:enabled="true" />
 
         <receiver
-            android:name=".services.ReminderAlarmBroadcastReceiver"
+            android:name=".services.AlarmReceiver"
             android:enabled="true" />
 
     </application>

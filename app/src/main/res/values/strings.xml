@@ -8,4 +8,5 @@
     <string name="select_date">Select Date</string>
     <string name="select_time">Select Time</string>
     <string name="save">Save</string>
+    <string name="add_reminder">Add Reminder</string>
 </resources>
