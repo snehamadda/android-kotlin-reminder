@@ -1,5 +1,6 @@
 package com.geeklabs.remindme.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ class ReminderAdapter(var reminderList: MutableList<Reminder>) :
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        @SuppressLint("SetTextI18n")
         fun bindItems(reminder: Reminder, position: Int) {
             itemView.serialTV.text = "${position + 1}."
             itemView.reminderTV.text = reminder.title

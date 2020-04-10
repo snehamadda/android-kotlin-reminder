@@ -1,61 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
-    android:background="@color/colorWhite"
-    android:orientation="horizontal"
-    android:padding="10dp">
+    android:layout_margin="5dp"
+    android:elevation="3dp"
+    card_view:cardCornerRadius="10dp">
 
-    <TextView
-        android:id="@+id/serialTV"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        tools:text="1" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_toStartOf="@id/timeAndDateLL"
-        android:layout_toEndOf="@+id/serialTV"
-        android:orientation="vertical">
+        android:background="@color/colorWhite"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <TextView
-            android:id="@+id/reminderTV"
+            android:id="@+id/serialTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            tools:text="Title" />
+            tools:text="1" />
 
-        <TextView
-            android:id="@+id/descriptionTV"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Description" />
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/timeAndDateLL"
+            android:layout_toEndOf="@+id/serialTV"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/reminderTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textIsSelectable="true"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="Title" />
 
-    <LinearLayout
-        android:id="@+id/timeAndDateLL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:orientation="vertical">
+            <TextView
+                android:id="@+id/descriptionTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                tools:text="Description" />
 
-        <TextView
-            android:id="@+id/timeTV"
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/timeAndDateLL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Time" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/dateTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Date" />
-    </LinearLayout>
-</RelativeLayout>
+            <TextView
+                android:id="@+id/timeTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                tools:text="Time" />
+
+            <TextView
+                android:id="@+id/dateTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                tools:text="Date" />
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -9,14 +9,12 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
 
         val reminderId = intent?.getLongExtra("reminderId", 0)
+        val isServiceRunning = intent?.getBooleanExtra("isServiceRunning", false)
 
         val reminderServiceIntent = Intent(context, ReminderService::class.java)
         reminderServiceIntent.putExtra("reminderId", reminderId)
-        context.startService(reminderServiceIntent)
-
-        /*val intentAlarm = Intent(context, AlarmActivity::class.java)
-        intentAlarm.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intentAlarm.putExtra("reminderId", reminderId)
-        context.startActivity(intentAlarm)*/
+        if (!isServiceRunning!!) {
+            context.startService(reminderServiceIntent)
+        }
     }
 }

@@ -106,7 +106,7 @@ class DatabaseHandler(context: Context) :
     }
 
     //method to delete data
-    fun deleteReminderById(id: Int): Int {
+    fun deleteReminderById(id: Long): Int {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(ID, id) // EmpModelClass UserId

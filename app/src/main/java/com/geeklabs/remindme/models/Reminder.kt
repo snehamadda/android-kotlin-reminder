@@ -1,7 +1,5 @@
 package com.geeklabs.remindme.models
 
-import java.io.Serializable
-
 data class Reminder(
     var id: Int = 0,
     var title: String = " ",
@@ -10,4 +8,4 @@ data class Reminder(
     var date: String = " ",
     var createdTime: Long = 0,
     var modifiedTime: Long = 0
-) : Serializable
+)

@@ -6,26 +6,29 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.IBinder
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.geeklabs.remindme.R
 import com.geeklabs.remindme.activites.MainActivity
 import com.geeklabs.remindme.database.DatabaseHandler
 import com.geeklabs.remindme.models.Reminder
+import java.util.*
 
 
 class ReminderService : Service() {
 
-    private var mediaPlayer: MediaPlayer? = null
+//    private var mediaPlayer: MediaPlayer? = null
+
+    private lateinit var tts: TextToSpeech
 
     override fun onCreate() {
         super.onCreate()
         Log.d("ReminderService", "onCreate called")
-        mediaPlayer = MediaPlayer.create(this, com.geeklabs.remindme.R.raw.alarm_ringtone)
-        mediaPlayer?.isLooping = true
+//        mediaPlayer = MediaPlayer.create(this, R.raw.alarm_ringtone)
+//        mediaPlayer?.isLooping = true
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -34,15 +37,23 @@ class ReminderService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d("ReminderService", "onStart called")
-        mediaPlayer?.start()
+        Log.d("ReminderService", "onStartCommand called")
 
         val reminderId = intent?.getLongExtra("reminderId", 0)
         val databaseHandler = DatabaseHandler(this)
         val reminder = databaseHandler.getReminderById(reminderId ?: 0)
         showAlarmNotification(reminder)
 
-        return START_NOT_STICKY
+        val speakText = reminder.title + " " + reminder.description
+        tts = TextToSpeech(applicationContext,
+            TextToSpeech.OnInitListener {
+                if (it != TextToSpeech.ERROR) {
+                    tts.language = Locale.UK
+                    tts.speak(speakText, TextToSpeech.QUEUE_FLUSH, null, null)
+                }
+            })
+
+        return START_STICKY
     }
 
     private fun showAlarmNotification(reminder: Reminder) {
@@ -58,13 +69,14 @@ class ReminderService : Service() {
             .setAutoCancel(true) // makes auto cancel of notification
             .setPriority(NotificationCompat.PRIORITY_DEFAULT) //set priority of notification
 
-        val notificationIntent = Intent(this, MainActivity::class.java)
+        val notificationIntent = Intent(applicationContext, MainActivity::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         //notification message will get at NotificationView
+        notificationIntent.putExtra("reminderId", reminder.id)
         notificationIntent.putExtra("from", "Notification")
 
         val pendingIntent = PendingIntent.getActivity(
-            this, 0, notificationIntent,
+            applicationContext, 0, notificationIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
         builder.setContentIntent(pendingIntent)
@@ -90,8 +102,15 @@ class ReminderService : Service() {
 
     override fun onDestroy() {
         Log.d("ReminderService", "onDestroy called")
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
         super.onDestroy()
+
+        /*if (mediaPlayer?.isPlaying == true) {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+        }*/
+
+        tts.stop()
+        tts.shutdown()
     }
+
 }

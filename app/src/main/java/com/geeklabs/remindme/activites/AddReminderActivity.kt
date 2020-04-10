@@ -1,12 +1,10 @@
 package com.geeklabs.remindme.activites
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.DatePickerDialog
-import android.app.PendingIntent
-import android.app.TimePickerDialog
+import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -14,10 +12,11 @@ import com.geeklabs.remindme.R
 import com.geeklabs.remindme.database.DatabaseHandler
 import com.geeklabs.remindme.models.Reminder
 import com.geeklabs.remindme.services.AlarmReceiver
+import com.geeklabs.remindme.services.ReminderService
 import com.geeklabs.remindme.utils.Util
 import kotlinx.android.synthetic.main.activity_add_reminder.*
-import java.text.SimpleDateFormat
 import java.util.*
+
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 class AddReminderActivity : AppCompatActivity() {
@@ -111,10 +110,9 @@ class AddReminderActivity : AppCompatActivity() {
         }
     }
 
+
     private fun updateDate() {
-        val dateFormat = "dd/MM/yyyy" //In which you need put here
-        val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
-        val formattedDate = sdf.format(myCalendar.time)
+        val formattedDate = Util.getFormattedDate(myCalendar.timeInMillis, "dd/MM/YYYY")
         dateTV.text = formattedDate
     }
 
@@ -127,13 +125,38 @@ class AddReminderActivity : AppCompatActivity() {
 
     private fun setRemainderAlarm(savedReminderId: Long) {
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val reminderService = ReminderService()
         val reminderReceiverIntent = Intent(this, AlarmReceiver::class.java)
+
         reminderReceiverIntent.putExtra("reminderId", savedReminderId)
+        reminderReceiverIntent.putExtra("isServiceRunning", isServiceRunning(reminderService))
         val pendingIntent =
             PendingIntent.getBroadcast(this, savedReminderId.toInt(), reminderReceiverIntent, 0)
-        alarmManager.set(AlarmManager.RTC_WAKEUP, myCalendar.timeInMillis, pendingIntent)
-        Log.d("TimeSetInMillis:", "${myCalendar.timeInMillis}")
-        Util.showToastMessage(this, "Alarm is set at : ${myCalendar.timeInMillis}")
+        val formattedDate = Util.getFormattedDate(myCalendar.timeInMillis, "dd/MM/YYYY HH:mm")
+        Log.d("TimeSetInMillis:", formattedDate)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP, myCalendar.timeInMillis, pendingIntent
+            )
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, myCalendar.timeInMillis, pendingIntent)
+        }
+
+        Util.showToastMessage(this, "Alarm is set at : $formattedDate")
+    }
+
+    @Suppress("DEPRECATION")
+    private fun isServiceRunning(reminderService: ReminderService): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (reminderService.javaClass.name == service.service.className) {
+                Log.i("isMyServiceRunning?", true.toString() + "")
+                return true
+            }
+        }
+        Log.i("isMyServiceRunning?", false.toString() + "")
+        return false
     }
 
 }
