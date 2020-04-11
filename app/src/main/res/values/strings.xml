@@ -9,4 +9,6 @@
     <string name="select_time">Select Time</string>
     <string name="save">Save</string>
     <string name="add_reminder">Add Reminder</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
 </resources>

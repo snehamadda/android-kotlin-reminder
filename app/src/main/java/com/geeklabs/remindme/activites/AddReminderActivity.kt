@@ -28,12 +28,17 @@ class AddReminderActivity : AppCompatActivity() {
 
     private var hour: Int = 0
     private var minute: Int = 0
+    private var reminderSaved = Reminder()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_reminder)
 
         databaseHandler = DatabaseHandler(this)
+
+        if (intent.hasExtra("reminder")) {
+            reminderSaved = intent.getSerializableExtra("reminder") as Reminder
+        }
 
         date = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             myCalendar.set(Calendar.YEAR, year)
@@ -42,7 +47,17 @@ class AddReminderActivity : AppCompatActivity() {
             updateDate()
         }
 
-        updateDate()
+        if (reminderSaved.id != 0) {
+            titleET.setText(reminderSaved.title)
+            descriptionET.setText(reminderSaved.description)
+            dateTV.text = reminderSaved.date
+            timeTV.text = reminderSaved.time
+
+            saveBtn.text = getString(R.string.update)
+        } else {
+            updateDate()
+            saveBtn.text = getString(R.string.save)
+        }
 
         selectDateButton.setOnClickListener {
             val datePickerDialog = DatePickerDialog(
@@ -91,14 +106,21 @@ class AddReminderActivity : AppCompatActivity() {
                 reminder.time = time
                 reminder.date = date
 
-                val saveReminderId = databaseHandler.saveReminder(reminder)
-                if (saveReminderId != 0L) {
-                    Util.showToastMessage(this, "Reminder saved successfully")
+                val saveReminderId: Int
+                saveReminderId = if (reminderSaved.id != 0) {
+                    reminder.id = reminderSaved.id
+                    databaseHandler.updateReminder(reminder)
+                    reminderSaved.id
+                } else {
+                    databaseHandler.saveReminder(reminder) as Int
+                }
+                if (saveReminderId != 0) {
+                    Util.showToastMessage(this, "Reminder save/updated successfully")
 
                     Log.d("AlarmTime", "Hour $hour")
                     Log.d("AlarmTime", "Min $minute")
 
-                    setRemainderAlarm(saveReminderId)
+                    setRemainderAlarm(saveReminderId as Long)
 
                     finish()
                 } else {

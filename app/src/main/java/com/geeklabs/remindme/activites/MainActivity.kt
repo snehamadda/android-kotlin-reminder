@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +20,7 @@ import com.geeklabs.remindme.utils.Util
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
 
     private lateinit var databaseHandler: DatabaseHandler
     private lateinit var adapter: ReminderAdapter
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recycler_view_reminder.layoutManager = linearLayoutManager
 
-        adapter = ReminderAdapter(reminderList)
+        adapter = ReminderAdapter(this)
         recycler_view_reminder.adapter = adapter
 
         getAllRemindersFromDB()
@@ -41,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         addReminderButton.setOnClickListener {
             val reminderIntent = Intent(this, AddReminderActivity::class.java)
             startActivity(reminderIntent)
-
         }
 
         val from = intent.getStringExtra("from")
@@ -88,5 +89,28 @@ class MainActivity : AppCompatActivity() {
         val sender = PendingIntent.getBroadcast(this, 0, intent, 0)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(sender)
+    }
+
+    override fun onItemClick(
+        reminder: Reminder,
+        view: View,
+        position: Int
+    ) {
+        val popupMenu = PopupMenu(this, view)
+        popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
+        popupMenu.setOnMenuItemClickListener {
+            Util.showToastMessage(this, "You Clicked on ${it.title}")
+            if (it.title == getString(R.string.update)) {
+                startActivity(
+                    Intent(this, AddReminderActivity::class.java)
+                        .putExtra("reminder", reminder)
+                )
+            } else if (it.title == getString(R.string.delete)) {
+                databaseHandler.deleteReminderById(reminder.id)
+                adapter.notifyItemRemoved(position)
+            }
+            return@setOnMenuItemClickListener true
+        }
+        popupMenu.show()
     }
 }
