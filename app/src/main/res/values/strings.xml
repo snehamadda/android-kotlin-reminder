@@ -11,4 +11,5 @@
     <string name="add_reminder">Add Reminder</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="search_reminder">Search reminder</string>
 </resources>

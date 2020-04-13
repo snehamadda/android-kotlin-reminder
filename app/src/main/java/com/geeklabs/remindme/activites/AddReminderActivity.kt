@@ -47,11 +47,28 @@ class AddReminderActivity : AppCompatActivity() {
             updateDate()
         }
 
-        if (reminderSaved.id != 0) {
+        if (reminderSaved.id != 0L) {
             titleET.setText(reminderSaved.title)
             descriptionET.setText(reminderSaved.description)
             dateTV.text = reminderSaved.date
             timeTV.text = reminderSaved.time
+
+            val split = reminderSaved.date.split("/")
+            val date = split[0]
+            val month = split[1]
+            val year = split[2]
+
+            val split1 = reminderSaved.time.split(":")
+            val hour = split1[0]
+            val minute = split1[1]
+
+            myCalendar.set(Calendar.YEAR, year.toInt())
+            myCalendar.set(Calendar.MONTH, month.toInt())
+            myCalendar.set(Calendar.DAY_OF_MONTH, date.toInt())
+
+            myCalendar.set(Calendar.HOUR_OF_DAY, hour.toInt())
+            myCalendar.set(Calendar.MINUTE, minute.toInt())
+            myCalendar.set(Calendar.SECOND, 0)
 
             saveBtn.text = getString(R.string.update)
         } else {
@@ -106,28 +123,26 @@ class AddReminderActivity : AppCompatActivity() {
                 reminder.time = time
                 reminder.date = date
 
-                val saveReminderId: Int
-                saveReminderId = if (reminderSaved.id != 0) {
+                val saveReminderId: Long
+                saveReminderId = if (reminderSaved.id != 0L) {
                     reminder.id = reminderSaved.id
                     databaseHandler.updateReminder(reminder)
                     reminderSaved.id
                 } else {
-                    databaseHandler.saveReminder(reminder) as Int
+                    databaseHandler.saveReminder(reminder)
                 }
-                if (saveReminderId != 0) {
+                if (saveReminderId != 0L) {
                     Util.showToastMessage(this, "Reminder save/updated successfully")
 
                     Log.d("AlarmTime", "Hour $hour")
                     Log.d("AlarmTime", "Min $minute")
 
-                    setRemainderAlarm(saveReminderId as Long)
+                    setRemainderAlarm(saveReminderId)
 
                     finish()
                 } else {
                     Util.showToastMessage(this, "Failed to save remainder")
                 }
-
-
             }
         }
     }
@@ -142,7 +157,7 @@ class AddReminderActivity : AppCompatActivity() {
     private fun updateTime(hour: Int, minute: Int) {
         this.hour = hour
         this.minute = minute
-        timeTV.text = "$hour : $minute"
+        timeTV.text = "$hour:$minute"
     }
 
     private fun setRemainderAlarm(savedReminderId: Long) {

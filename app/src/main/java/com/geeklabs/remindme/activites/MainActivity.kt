@@ -1,10 +1,13 @@
 package com.geeklabs.remindme.activites
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
@@ -20,8 +23,9 @@ import com.geeklabs.remindme.utils.Util
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
+class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener, TextWatcher {
 
+    private var filteredListFinal: List<Reminder> = mutableListOf()
     private lateinit var databaseHandler: DatabaseHandler
     private lateinit var adapter: ReminderAdapter
     private var reminderList = mutableListOf<Reminder>()
@@ -51,12 +55,43 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
             val reminderById = databaseHandler.getReminderById(reminderId)
             showReminderAlert(reminderById)
         }
+
+        searchET.addTextChangedListener(this)
+    }
+
+    @SuppressLint("DefaultLocale")
+    override fun afterTextChanged(p0: Editable?) {
+        val filterList = mutableListOf<Reminder>()
+        filterList.addAll(reminderList)
+        if (!p0.isNullOrEmpty()) {
+            filteredListFinal =
+                filterList.filter {
+                    it.title.toLowerCase().contains(p0.toString().toLowerCase()) ||
+                            it.description.toLowerCase().contains(p0.toString().toLowerCase())
+                }
+        } else {
+            filteredListFinal = reminderList
+        }
+        adapter.reminderList = filteredListFinal as MutableList<Reminder>
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+    }
+
+    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
     }
 
     private fun getAllRemindersFromDB() {
         reminderList = databaseHandler.getAll()
         adapter.reminderList = reminderList
         adapter.notifyDataSetChanged()
+
+        if (reminderList.size > 0) {
+            searchET.visibility = View.VISIBLE
+        } else {
+            searchET.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
@@ -99,7 +134,6 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
         val popupMenu = PopupMenu(this, view)
         popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
         popupMenu.setOnMenuItemClickListener {
-            Util.showToastMessage(this, "You Clicked on ${it.title}")
             if (it.title == getString(R.string.update)) {
                 startActivity(
                     Intent(this, AddReminderActivity::class.java)
@@ -113,4 +147,5 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
         }
         popupMenu.show()
     }
+
 }

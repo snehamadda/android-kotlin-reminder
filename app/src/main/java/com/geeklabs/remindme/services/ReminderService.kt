@@ -60,7 +60,7 @@ class ReminderService : Service() {
 
         Log.d("ReminderService", "showAlarmNotification called")
 
-        createNotificationChannel(reminder.id)
+        createNotificationChannel(reminder.id.toInt())
         // build notification
         val builder = NotificationCompat.Builder(this, reminder.id.toString())
             .setSmallIcon(R.drawable.remind_me_logo) //set icon for notification
@@ -84,7 +84,7 @@ class ReminderService : Service() {
 
         // Add as notification
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        manager.notify(reminder.id, notification)
+        manager.notify(reminder.id.toInt(), notification)
 
     }
 

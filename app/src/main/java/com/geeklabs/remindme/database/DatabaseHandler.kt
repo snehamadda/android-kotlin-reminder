@@ -9,20 +9,20 @@ import com.geeklabs.remindme.models.Reminder
 class DatabaseHandler(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
-        private val DATABASE_VERSION = 1
-        private val DATABASE_NAME = "RemindMeDB"
-        private val TABLE_REMINDER = "Reminder"
-        private val ID = "id"
-        private val TITLE = "title"
-        private val DESCRIPTION = "description"
-        private val TIME = "time"
-        private val DATE = "date"
-        private val CREATED_TIME = "createdTime"
-        private val MODIFIED_TIME = "modifiedTime"
+        private const val DATABASE_VERSION = 1
+        private const val DATABASE_NAME = "RemindMeDB"
+        private const val TABLE_REMINDER = "Reminder"
+        private const val ID = "id"
+        private const val TITLE = "title"
+        private const val DESCRIPTION = "description"
+        private const val TIME = "time"
+        private const val DATE = "date"
+        private const val CREATED_TIME = "createdTime"
+        private const val MODIFIED_TIME = "modifiedTime"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
-        val CREATE_REMINDER_TABLE = ("CREATE TABLE " + TABLE_REMINDER + "("
+        val createTable = ("CREATE TABLE " + TABLE_REMINDER + "("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + TITLE + " TEXT,"
                 + DESCRIPTION + " TEXT,"
@@ -30,11 +30,11 @@ class DatabaseHandler(context: Context) :
                 + DATE + " TEXT,"
                 + CREATED_TIME + " TEXT,"
                 + MODIFIED_TIME + " TEXT " + ")")
-        db?.execSQL(CREATE_REMINDER_TABLE)
+        db?.execSQL(createTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS " + TABLE_REMINDER)
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_REMINDER")
         onCreate(db)
     }
 
@@ -54,10 +54,10 @@ class DatabaseHandler(context: Context) :
         return success
     }
 
-    fun getReminderById(id: Long): Reminder {
+    fun getReminderById(reminderId: Long): Reminder {
         val reminder = Reminder()
         val db = this.readableDatabase
-        val query = "SELECT * FROM $TABLE_REMINDER WHERE $ID = '$id'"
+        val query = "SELECT * FROM $TABLE_REMINDER WHERE $ID = '$reminderId'"
         val cursor = db.rawQuery(query, null)
         if (cursor.count < 1) {
             cursor.close()
@@ -65,7 +65,7 @@ class DatabaseHandler(context: Context) :
         } else {
             cursor.moveToFirst()
 
-            val id_ = Integer.parseInt(cursor.getString(0))
+            val id = cursor.getString(0).toLong()
             val title = cursor.getString(1)
             val description = cursor.getString(2)
             val time = cursor.getString(3)
@@ -73,7 +73,7 @@ class DatabaseHandler(context: Context) :
             val createdTime = cursor.getLong(5)
             val modifiedTime = cursor.getLong(6)
 
-            reminder.id = id_
+            reminder.id = id
             reminder.title = title
             reminder.description = description
             reminder.date = date
@@ -106,12 +106,12 @@ class DatabaseHandler(context: Context) :
     }
 
     //method to delete data
-    fun deleteReminderById(id: Int): Int {
+    fun deleteReminderById(id: Long): Int {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(ID, id) // EmpModelClass UserId
         // Deleting Row
-        val success = db.delete(TABLE_REMINDER, "$ID=" + id, null)
+        val success = db.delete(TABLE_REMINDER, "$ID=$id", null)
         //2nd argument is String containing nullColumnHack
         db.close() // Closing database connection
         return success
@@ -125,7 +125,7 @@ class DatabaseHandler(context: Context) :
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast) {
                 val reminder = Reminder()
-                val id_ = Integer.parseInt(cursor.getString(0))
+                val id = cursor.getString(0).toLong()
                 val title = cursor.getString(1)
                 val description = cursor.getString(2)
                 val time = cursor.getString(3)
@@ -133,7 +133,7 @@ class DatabaseHandler(context: Context) :
                 val createdTime = cursor.getLong(5)
                 val modifiedTime = cursor.getLong(6)
 
-                reminder.id = id_
+                reminder.id = id
                 reminder.title = title
                 reminder.description = description
                 reminder.date = date
@@ -145,6 +145,7 @@ class DatabaseHandler(context: Context) :
                 cursor.moveToNext()
             }
         }
+        cursor.close()
         db.close()
         return reminderList
     }
