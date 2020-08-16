@@ -1,17 +1,15 @@
 package com.geeklabs.remindme.activites
 
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.geeklabs.remindme.R
 import com.geeklabs.remindme.adapters.ReminderAdapter
@@ -21,9 +19,10 @@ import com.geeklabs.remindme.services.AlarmReceiver
 import com.geeklabs.remindme.services.ReminderService
 import com.geeklabs.remindme.utils.Util
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 
-class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener, TextWatcher {
+class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
 
     private var filteredListFinal: List<Reminder> = mutableListOf()
     private lateinit var databaseHandler: DatabaseHandler
@@ -56,42 +55,52 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener, T
             showReminderAlert(reminderById)
         }
 
-        searchET.addTextChangedListener(this)
+        searchET.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                filterData(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                filterData(newText)
+                return false
+            }
+        })
     }
 
-    @SuppressLint("DefaultLocale")
-    override fun afterTextChanged(p0: Editable?) {
-        val filterList = mutableListOf<Reminder>()
-        filterList.addAll(reminderList)
-        if (!p0.isNullOrEmpty()) {
-            filteredListFinal =
-                filterList.filter {
-                    it.title.toLowerCase().contains(p0.toString().toLowerCase()) ||
-                            it.description.toLowerCase().contains(p0.toString().toLowerCase())
-                }
-        } else {
-            filteredListFinal = reminderList
+    private fun filterData(query: String) {
+        val finalList = if (query.isEmpty()) reminderList else reminderList.filter {
+            it.title.toLowerCase(Locale.getDefault())
+                .contains(query.toLowerCase(Locale.getDefault())) ||
+                    it.description.toLowerCase(Locale.getDefault()).contains(
+                        query.toLowerCase(
+                            Locale.getDefault()
+                        )
+                    )
         }
-        adapter.reminderList = filteredListFinal as MutableList<Reminder>
+        if (finalList.isNotEmpty()) {
+            updateList(finalList.toMutableList())
+        }
+    }
+
+    private fun updateList(finalList: MutableList<Reminder>) {
+        adapter.reminderList = finalList
         adapter.notifyDataSetChanged()
-    }
 
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-    }
-
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        if (reminderList.size > 0) {
+            recycler_view_reminder.visibility = View.VISIBLE
+            searchET.visibility = View.VISIBLE
+            noData.visibility = View.GONE
+        } else {
+            recycler_view_reminder.visibility = View.GONE
+            searchET.visibility = View.GONE
+            noData.visibility = View.VISIBLE
+        }
     }
 
     private fun getAllRemindersFromDB() {
         reminderList = databaseHandler.getAll()
-        adapter.reminderList = reminderList
-        adapter.notifyDataSetChanged()
-
-        if (reminderList.size > 0) {
-            searchET.visibility = View.VISIBLE
-        } else {
-            searchET.visibility = View.GONE
-        }
+        updateList(reminderList)
     }
 
     override fun onResume() {
@@ -141,7 +150,7 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener, T
                 )
             } else if (it.title == getString(R.string.delete)) {
                 databaseHandler.deleteReminderById(reminder.id)
-                adapter.notifyItemRemoved(position)
+                getAllRemindersFromDB()
             }
             return@setOnMenuItemClickListener true
         }

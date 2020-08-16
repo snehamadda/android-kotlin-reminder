@@ -11,9 +11,15 @@ object Util {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun getFormattedDate(timeInMillis: Long, format: String): String {
+    fun getFormattedDateInString(timeInMillis: Long, format: String): String {
         val sdf = SimpleDateFormat(format, Locale.getDefault())
         return sdf.format(timeInMillis)
     }
+
+    fun getFormattedDate(timeInString: String, format: String): Date {
+        val sdf = SimpleDateFormat(format, Locale.getDefault())
+        return sdf.parse(timeInString)
+    }
+
 
 }

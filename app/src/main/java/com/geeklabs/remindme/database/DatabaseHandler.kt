@@ -111,10 +111,10 @@ class DatabaseHandler(context: Context) :
         val contentValues = ContentValues()
         contentValues.put(ID, id) // EmpModelClass UserId
         // Deleting Row
-        val success = db.delete(TABLE_REMINDER, "$ID=$id", null)
+        val rowId = db.delete(TABLE_REMINDER, "$ID=$id", null)
         //2nd argument is String containing nullColumnHack
         db.close() // Closing database connection
-        return success
+        return rowId
     }
 
     fun getAll(): MutableList<Reminder> {

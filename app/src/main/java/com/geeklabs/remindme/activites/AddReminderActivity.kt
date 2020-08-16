@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.activity_add_reminder.*
 import java.util.*
 
 
-@Suppress("CAST_NEVER_SUCCEEDS")
 class AddReminderActivity : AppCompatActivity() {
 
     private lateinit var alarmManager: AlarmManager
@@ -106,7 +105,7 @@ class AddReminderActivity : AppCompatActivity() {
         }
 
         saveBtn.setOnClickListener {
-            if (titleET.text.isEmpty()) {
+            if (titleET.text?.isEmpty() == true) {
                 Util.showToastMessage(this, "Please select title")
             } else if (timeTV.text == getString(R.string.time)) {
                 Util.showToastMessage(this, "Please select time")
@@ -149,7 +148,7 @@ class AddReminderActivity : AppCompatActivity() {
 
 
     private fun updateDate() {
-        val formattedDate = Util.getFormattedDate(myCalendar.timeInMillis, "dd/MM/YYYY")
+        val formattedDate = Util.getFormattedDateInString(myCalendar.timeInMillis, "dd/MM/YYYY")
         dateTV.text = formattedDate
     }
 
@@ -169,7 +168,7 @@ class AddReminderActivity : AppCompatActivity() {
         reminderReceiverIntent.putExtra("isServiceRunning", isServiceRunning(reminderService))
         val pendingIntent =
             PendingIntent.getBroadcast(this, savedReminderId.toInt(), reminderReceiverIntent, 0)
-        val formattedDate = Util.getFormattedDate(myCalendar.timeInMillis, "dd/MM/YYYY HH:mm")
+        val formattedDate = Util.getFormattedDateInString(myCalendar.timeInMillis, "dd/MM/YYYY HH:mm")
         Log.d("TimeSetInMillis:", formattedDate)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

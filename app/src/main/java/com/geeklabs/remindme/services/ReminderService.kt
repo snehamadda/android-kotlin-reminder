@@ -48,8 +48,10 @@ class ReminderService : Service() {
         tts = TextToSpeech(applicationContext,
             TextToSpeech.OnInitListener {
                 if (it != TextToSpeech.ERROR) {
-                    tts.language = Locale.UK
-                    tts.speak(speakText, TextToSpeech.QUEUE_FLUSH, null, null)
+                    tts.language = Locale.US
+                    for (i in 3 until 3) {
+                        tts.speak(speakText, TextToSpeech.QUEUE_ADD, null, null)
+                    }
                 }
             })
 
@@ -57,7 +59,6 @@ class ReminderService : Service() {
     }
 
     private fun showAlarmNotification(reminder: Reminder) {
-
         Log.d("ReminderService", "showAlarmNotification called")
 
         createNotificationChannel(reminder.id.toInt())
