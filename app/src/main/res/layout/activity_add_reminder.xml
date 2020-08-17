@@ -37,7 +37,7 @@
                 android:hint="@string/description"
                 android:imeOptions="actionDone"
                 android:inputType="textMultiLine"
-                android:maxLength="3000"
+                android:maxLength="500"
                 android:maxLines="10"
                 android:minLines="3" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -61,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
-                android:text="@string/select_date" />
+                android:text="@string/select_date"
+                android:textColor="@color/colorWhite" />
 
         </LinearLayout>
 
@@ -84,7 +85,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
-                android:text="@string/select_time" />
+                android:text="@string/select_time"
+                android:textColor="@color/colorWhite" />
 
         </LinearLayout>
 
@@ -95,7 +97,8 @@
             android:layout_gravity="center"
             android:layout_marginTop="50sp"
             android:backgroundTint="@color/colorPrimary"
-            android:text="@string/save" />
+            android:text="@string/save"
+            android:textColor="@color/colorWhite" />
     </LinearLayout>
 
 </ScrollView>

@@ -1,4 +1,4 @@
-package com.geeklabs.remindme.activites
+package com.geeklabs.remindme.activities
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -24,7 +24,6 @@ class AddReminderActivity : AppCompatActivity() {
     private lateinit var databaseHandler: DatabaseHandler
     private val myCalendar = Calendar.getInstance()
     private var date: DatePickerDialog.OnDateSetListener? = null
-
     private var hour: Int = 0
     private var minute: Int = 0
     private var reminderSaved = Reminder()
@@ -83,7 +82,6 @@ class AddReminderActivity : AppCompatActivity() {
             )
             datePickerDialog.datePicker.minDate = myCalendar.timeInMillis
             datePickerDialog.show()
-
         }
 
         selectTimeButton.setOnClickListener {
@@ -131,21 +129,15 @@ class AddReminderActivity : AppCompatActivity() {
                     databaseHandler.saveReminder(reminder)
                 }
                 if (saveReminderId != 0L) {
-                    Util.showToastMessage(this, "Reminder save/updated successfully")
-
-                    Log.d("AlarmTime", "Hour $hour")
-                    Log.d("AlarmTime", "Min $minute")
-
+                    Log.d("AlarmTime", "Hour: $hour")
+                    Log.d("AlarmTime", "Min: $minute")
                     setRemainderAlarm(saveReminderId)
-
-                    finish()
                 } else {
                     Util.showToastMessage(this, "Failed to save remainder")
                 }
             }
         }
     }
-
 
     private fun updateDate() {
         val formattedDate = Util.getFormattedDateInString(myCalendar.timeInMillis, "dd/MM/YYYY")
@@ -180,6 +172,7 @@ class AddReminderActivity : AppCompatActivity() {
         }
 
         Util.showToastMessage(this, "Alarm is set at : $formattedDate")
+        finish()
     }
 
     @Suppress("DEPRECATION")

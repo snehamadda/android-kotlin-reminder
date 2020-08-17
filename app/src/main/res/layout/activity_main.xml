@@ -13,8 +13,6 @@
         android:layout_height="wrap_content"
         android:imeOptions="actionSearch"
         android:inputType="text"
-        android:paddingBottom="10dp"
-        android:visibility="gone"
         app:iconifiedByDefault="false"
         app:queryHint="@string/search_reminder"
         tools:visibility="visible" />
@@ -24,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/searchET"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="10"
         tools:listitem="@layout/item_reminder" />
 
@@ -35,7 +34,8 @@
         android:layout_margin="20dp"
         android:gravity="center"
         android:padding="10dp"
-        android:text="@string/add_reminder_hint" />
+        android:text="@string/add_reminder_hint"
+        android:visibility="gone" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addReminderButton"

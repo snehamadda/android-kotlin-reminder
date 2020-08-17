@@ -12,5 +12,5 @@
     <string name="update">Update</string>
     <string name="delete">Delete</string>
     <string name="search_reminder">Search reminder</string>
-    <string name="add_reminder_hint">No reminders added yet. Please click plus to add a reminder</string>
+    <string name="add_reminder_hint">No reminders added yet.\nPlease click plus to add a reminder</string>
 </resources>

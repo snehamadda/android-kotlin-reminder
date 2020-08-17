@@ -1,4 +1,4 @@
-package com.geeklabs.remindme.activites
+package com.geeklabs.remindme.activities
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -10,7 +10,6 @@ import android.widget.PopupMenu
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.geeklabs.remindme.R
 import com.geeklabs.remindme.adapters.ReminderAdapter
 import com.geeklabs.remindme.database.DatabaseHandler
@@ -24,7 +23,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
 
-    private var filteredListFinal: List<Reminder> = mutableListOf()
     private lateinit var databaseHandler: DatabaseHandler
     private lateinit var adapter: ReminderAdapter
     private var reminderList = mutableListOf<Reminder>()
@@ -34,10 +32,6 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
         setContentView(R.layout.activity_main)
 
         databaseHandler = DatabaseHandler(this)
-
-        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recycler_view_reminder.layoutManager = linearLayoutManager
-
         adapter = ReminderAdapter(this)
         recycler_view_reminder.adapter = adapter
 
@@ -57,7 +51,6 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
 
         searchET.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                filterData(query)
                 return false
             }
 
@@ -89,11 +82,9 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
 
         if (reminderList.size > 0) {
             recycler_view_reminder.visibility = View.VISIBLE
-            searchET.visibility = View.VISIBLE
             noData.visibility = View.GONE
         } else {
             recycler_view_reminder.visibility = View.GONE
-            searchET.visibility = View.GONE
             noData.visibility = View.VISIBLE
         }
     }
@@ -123,16 +114,16 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
         alertDialog.show()
     }
 
-    private fun stopReminderService() {
-        val reminderService = Intent(this, ReminderService::class.java)
-        stopService(reminderService)
-    }
-
     private fun stopAlarm() {
         val intent = Intent(this, AlarmReceiver::class.java)
         val sender = PendingIntent.getBroadcast(this, 0, intent, 0)
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(sender)
+    }
+
+    private fun stopReminderService() {
+        val reminderService = Intent(this, ReminderService::class.java)
+        stopService(reminderService)
     }
 
     override fun onItemClick(

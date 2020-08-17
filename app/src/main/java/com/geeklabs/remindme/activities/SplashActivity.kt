@@ -1,4 +1,4 @@
-package com.geeklabs.remindme.activites
+package com.geeklabs.remindme.activities
 
 import android.content.Intent
 import android.os.Bundle
