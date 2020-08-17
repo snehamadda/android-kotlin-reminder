@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.geeklabs.remindme">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
@@ -44,6 +45,10 @@
             android:name=".services.AlarmReceiver"
             android:enabled="true"
             android:label="AlarmReceiver" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/add_app_id" />
 
     </application>
 

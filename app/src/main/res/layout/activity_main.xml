@@ -21,6 +21,7 @@
         android:id="@+id/recycler_view_reminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/adView"
         android:layout_below="@+id/searchET"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="10"
@@ -41,11 +42,19 @@
         android:id="@+id/addReminderButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/adView"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/fab_margin"
         android:backgroundTint="@color/colorPrimary"
         android:tint="@color/colorWhite"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/rss_banner_unit_id" />
 
 </RelativeLayout>

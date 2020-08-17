@@ -17,6 +17,7 @@ import com.geeklabs.remindme.models.Reminder
 import com.geeklabs.remindme.services.AlarmReceiver
 import com.geeklabs.remindme.services.ReminderService
 import com.geeklabs.remindme.utils.Util
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initAdds()
         databaseHandler = DatabaseHandler(this)
         adapter = ReminderAdapter(this)
         recycler_view_reminder.adapter = adapter
@@ -59,6 +61,10 @@ class MainActivity : AppCompatActivity(), ReminderAdapter.OnItemClickListener {
                 return false
             }
         })
+    }
+
+    private fun initAdds() {
+        MobileAds.initialize(this) { }
     }
 
     private fun filterData(query: String) {

@@ -13,4 +13,7 @@
     <string name="delete">Delete</string>
     <string name="search_reminder">Search reminder</string>
     <string name="add_reminder_hint">No reminders added yet.\nPlease click plus to add a reminder</string>
+
+    <string name="add_app_id">ca-app-pub-1433704113656055~7992609748</string>
+    <string name="rss_banner_unit_id">ca-app-pub-1433704113656055/9819535807</string>
 </resources>

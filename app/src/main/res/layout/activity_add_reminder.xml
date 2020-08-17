@@ -1,104 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/adView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
+            android:paddingBottom="100dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/titleET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:minLines="2" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/descriptionET"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:gravity="start"
+                    android:hint="@string/description"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine"
+                    android:maxLength="500"
+                    android:maxLines="10"
+                    android:minLines="3" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/dateTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:padding="10dp"
+                    android:text="@string/date"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/selectDateButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="@string/select_date"
+                    android:textColor="@color/colorWhite" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/timeTV"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:padding="10dp"
+                    android:text="@string/time"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/selectTimeButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="@string/select_time"
+                    android:textColor="@color/colorWhite" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/saveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50sp"
+                android:backgroundTint="@color/colorPrimary"
+                android:text="@string/save"
+                android:textColor="@color/colorWhite" />
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:orientation="vertical"
-        android:paddingBottom="100dp">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/titleET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/title"
-                android:inputType="text"
-                android:maxLength="100"
-                android:minLines="2" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/descriptionET"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:gravity="start"
-                android:hint="@string/description"
-                android:imeOptions="actionDone"
-                android:inputType="textMultiLine"
-                android:maxLength="500"
-                android:maxLines="10"
-                android:minLines="3" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/dateTV"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.5"
-                android:padding="10dp"
-                android:text="@string/date"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/selectDateButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
-                android:text="@string/select_date"
-                android:textColor="@color/colorWhite" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/timeTV"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.5"
-                android:padding="10dp"
-                android:text="@string/time"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/selectTimeButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
-                android:text="@string/select_time"
-                android:textColor="@color/colorWhite" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/saveBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50sp"
-            android:backgroundTint="@color/colorPrimary"
-            android:text="@string/save"
-            android:textColor="@color/colorWhite" />
-    </LinearLayout>
-
-</ScrollView>
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/rss_banner_unit_id" />
+</RelativeLayout>
